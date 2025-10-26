@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cocinas.integrales.negocio.cloudinary.service.impl.CloudinaryService;
 import com.cocinas.integrales.negocio.model.GenericResponse;
 import com.cocinas.integrales.negocio.productos.model.Imagenes;
 import com.cocinas.integrales.negocio.productos.model.Productos;
@@ -36,9 +37,12 @@ public class ProductosController {
 	private static final Logger LOG = LoggerFactory.getLogger(ProductosController.class);
 
 	private final ServicioProductos serviceProductos;
+	private final CloudinaryService serviceCloudinary;
 
-	public ProductosController(ServicioProductos serviceProductos) {
+	public ProductosController(ServicioProductos serviceProductos,
+			CloudinaryService serviceCloudinary) {
 		this.serviceProductos = serviceProductos;
+		this.serviceCloudinary = serviceCloudinary;
 	}
 
 	@PostMapping("/productos/registro")
@@ -54,22 +58,17 @@ public class ProductosController {
 
 			// Recorrer archivos y subirlos a Cloudinary (aún no implementado)
 			// Por ahora solo imprimimos
-			for (MultipartFile imagen : imagenes) {
-				System.out.println("➡️ Imagen: " + imagen.getOriginalFilename());
+			 for (MultipartFile imagen : imagenes) {
+		            System.out.println("➡️ Imagen: " + imagen.getOriginalFilename());
 
-				// 🔹 Aquí luego se sube al cloud y se obtiene la URL
-				// String url = cloudinaryService.subirImagen(imagen);
-				// producto.getImagenes().add(new Imagenes(null, imagen.getOriginalFilename(),
-				// url));
+		            // Subimos la imagen a Cloudinary
+		            String url = serviceCloudinary.subirImagen(imagen);
 
-				// Por ahora solo guardamos el nombre y dejamos URL vacía
-			
-				Imagenes img = new Imagenes();
-				img.setNombreImagen(imagen.getOriginalFilename());
-				img.setUrlImagen(""); // luego se llenará al subir al cloud
-				listaImagenes.add(img);
-
-			}
+		            Imagenes img = new Imagenes();
+		            img.setNombreImagen(imagen.getOriginalFilename());
+		            img.setUrlImagen(url); // ahora sí tiene URL real
+		            listaImagenes.add(img);
+		        }
 
 			producto.setImagen(listaImagenes);
 
