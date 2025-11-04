@@ -24,11 +24,6 @@ import com.cocinas.integrales.negocio.productos.model.Productos;
 import com.cocinas.integrales.negocio.productos.service.impl.ServicioProductos;
 
 
-
-
-
-
-
 @CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST })
 @RestController
 @RequestMapping("/api/gestion")
@@ -117,30 +112,30 @@ public class ProductosController {
 		}
 	}
 
-	@PostMapping("/productos/editar")
-	public ResponseEntity<GenericResponse<String>> editarProductos(@RequestBody Productos productoEditado) {
-		GenericResponse<String> respuesta = new GenericResponse<>();
-
-		try {
-			boolean actualizado = serviceProductos.editarProducto(productoEditado);
-
-			if (actualizado) {
-				respuesta.setCode(HttpStatus.OK.value());
-				respuesta.setMessage("Producto editado correctamente");
-				return ResponseEntity.ok(respuesta);
-			} else {
-				respuesta.setCode(HttpStatus.NOT_FOUND.value());
-				respuesta.setMessage("No se encontró el producto con el ID especificado");
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respuesta);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			respuesta.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			respuesta.setMessage("Error al editar el producto: " + e.getMessage());
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
-		}
-	}
+//	@PostMapping("/productos/editar")
+//	public ResponseEntity<GenericResponse<String>> editarProductos(@RequestBody Productos productoEditado) {
+//		GenericResponse<String> respuesta = new GenericResponse<>();
+//
+//		try {
+//			boolean actualizado = serviceProductos.editarProducto(productoEditado);
+//
+//			if (actualizado) {
+//				respuesta.setCode(HttpStatus.OK.value());
+//				respuesta.setMessage("Producto editado correctamente");
+//				return ResponseEntity.ok(respuesta);
+//			} else {
+//				respuesta.setCode(HttpStatus.NOT_FOUND.value());
+//				respuesta.setMessage("No se encontró el producto con el ID especificado");
+//				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respuesta);
+//			}
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			respuesta.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+//			respuesta.setMessage("Error al editar el producto: " + e.getMessage());
+//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
+//		}
+//	}
 
 	@PostMapping("/productos/eliminar")
 	public ResponseEntity<GenericResponse<String>> eliminarProductos(

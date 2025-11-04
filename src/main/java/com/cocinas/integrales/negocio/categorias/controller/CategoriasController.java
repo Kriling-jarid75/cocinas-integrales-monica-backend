@@ -70,7 +70,7 @@ public class CategoriasController {
 	        
 	       // todosLosProductos.clear();
 	    	
-	    	List<CategoriasModels> todosLosProductos = serviceCategorias.getCategorias();
+	    	List<CategoriasModels> todosLosProductos = serviceCategorias.obtenerTodasLasCategorias();
 	       
 
 	        // Armas la respuesta

@@ -12,18 +12,13 @@ import lombok.ToString;
 @Getter
 @ToString
 public class Productos {
-//	private Long idProducto;
-//	private String nombre;
-//	private String descripcion;
-//	private CategoriasProductos categoria;
-//	private String precio;
-	
-	
+
+
 	private Long idProducto;
 	private String nombre;
 	private String descripcion;
 	private CategoriasModels categoria; // ⚡ objeto completo
-	private String precio;
+//	private String precio;
 //	private String imagenBase64;
 	private List<Imagenes> imagen;   // nueva propiedad para la ruta
 	
