@@ -11,7 +11,7 @@ public enum ConstantesDB {
 	
 	consultar_usuario_contraseña("{CALL sp_consulta_admin(?)}"),
 
-	consultar_todos_produtos(""),
+	consultar_todos_produtos("{CALL sp_consulta_todos_productos()}"),
 	registro_productos("{CALL sp_registro_productos(?, ?, ?, ?)}"),
 	editar_producto(""),
 	eliminar_producto(""),

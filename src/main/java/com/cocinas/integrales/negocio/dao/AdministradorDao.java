@@ -38,30 +38,36 @@ public class AdministradorDao implements IAdministrador {
 
 	@Override
 	public Administrador findByUsername(String username) {
-		Administrador admin = new Administrador();
+	    Administrador admin = null; // Será null si no se encuentra el usuario
 
-		String sql = ConstantesDB.consultar_usuario_contraseña.getQuery();
+	    String sql = ConstantesDB.consultar_usuario_contraseña.getQuery(); // ejemplo: "{CALL sp_consulta_admin(?)}"
 
-		try (Connection conn = DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(),
-				dbConfig.getPassword());
-				CallableStatement cs = conn.prepareCall(sql);
+	    try (Connection conn = DriverManager.getConnection(
+	                dbConfig.getUrl(),
+	                dbConfig.getUsername(),
+	                dbConfig.getPassword());
+	         CallableStatement cs = conn.prepareCall(sql)) {
 
-				ResultSet rs = cs.executeQuery()) {
+	        // ✅ 1. Asignar el parámetro antes de ejecutar
+	        cs.setString(1, username);
 
-			cs.setString(1, username);
+	        // ✅ 2. Ejecutar el SP
+	        try (ResultSet rs = cs.executeQuery()) {
+	            if (rs.next()) {
+	                admin = new Administrador();
+	                admin.setUsername(rs.getString("nombre_usuarios"));
+	                admin.setPassword(rs.getString("password_usuarios"));
+	                admin.setRol(rs.getString("nombre_rol"));
+	            }
+	        }
 
-			if (rs.next()) {
-				admin.setUsername(rs.getString("nombre_usuarios"));
-				admin.setPassword(rs.getString("password_usuarios"));
-				admin.setRol(rs.getString("nombre_rol")); // aquí guardamos el rol como texto
-			}
+	    } catch (SQLException e) {
+	        LOG.error("❌ Error al validar usuario: {}", e.getMessage(), e);
+	    }
 
-		} catch (SQLException e) {
-			LOG.info("Error al validar usuario: {}", e.getMessage());
-		}
-
-		return admin;
+	    return admin;
 	}
+
 
 
 

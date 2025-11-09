@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.cocinas.integrales.negocio.productos.dao.ProductosDao;
-import com.cocinas.integrales.negocio.productos.model.Imagenes;
+
 import com.cocinas.integrales.negocio.productos.model.Productos;
 
 
@@ -22,16 +22,14 @@ public class ServicioProductos {
 	public ServicioProductos(ProductosDao vamosAlDao) {
 		this.vamosAlDao = vamosAlDao;
 	}
-
-	public final List<Productos> todosLosProductos = new ArrayList<>();
 	private long nextId = 1; // Contador para asignar IDs automáticamente
 	private long nextIdImagen = 1; // contador global de imágenes
 
-	public List<Productos> getProductos() {
-
-		System.out.println("Mostramos los productos " + "\n" + todosLosProductos);
-		return todosLosProductos;
-	}
+//	public List<Productos> getProductos() {
+//
+//		System.out.println("Mostramos los productos " + "\n" + todosLosProductos);
+//		return todosLosProductos;
+//	}
 
 //	public List<Productos> agregarProductos(Productos req) {
 //		if (req.getIdProducto() == null) {
@@ -50,6 +48,21 @@ public class ServicioProductos {
 //		todosLosProductos.add(req);
 //		return todosLosProductos;
 //	}
+	
+	
+	public List<Productos> getProductos() {
+		
+		
+		List<Productos> todosLosProductos = vamosAlDao.consultarTodosLosProductosDao();
+	
+	return todosLosProductos;
+}
+	
+	
+	
+	
+	
+	
 
 	public String agregarProductos(Productos req) {
 		try {
@@ -88,8 +101,8 @@ public class ServicioProductos {
 //	}
 
 	// Opcional: eliminar producto
-	public boolean eliminarProducto(Productos productoEliminado) {
-		return todosLosProductos.removeIf(p -> p.getIdProducto().equals(productoEliminado.getIdProducto()));
-	}
+//	public boolean eliminarProducto(Productos productoEliminado) {
+//		return todosLosProductos.removeIf(p -> p.getIdProducto().equals(productoEliminado.getIdProducto()));
+//	}
 
 }

@@ -7,7 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Repository;
 import com.cocinas.integrales.negocio.categorias.model.CategoriasModels;
 import com.cocinas.integrales.negocio.config.Database.DatabaseConfig;
 import com.cocinas.integrales.negocio.constansDB.ConstantesDB;
+import com.cocinas.integrales.negocio.productos.model.Imagenes;
 import com.cocinas.integrales.negocio.productos.model.Productos;
 
 
@@ -66,42 +69,65 @@ public class CategoriasDao {
 	
 	
 	public List<Productos> consultarProdutoPorCategoriaDao(String nombreCategoria) {
+		
+	    String sql = ConstantesDB.consultar_producto_por_categoria.getQuery();
+	    List<Productos> productosList = new ArrayList<>();
 
-		String sql = ConstantesDB.consultar_producto_por_categoria.getQuery();
+	    try (Connection conn = DriverManager.getConnection(
+	                dbConfig.getUrl(),
+	                dbConfig.getUsername(),
+	                dbConfig.getPassword());
+	         CallableStatement cs = conn.prepareCall(sql)) {
 
-		List<Productos> productosList = new ArrayList<>();
+	        // ✅ Primero asignamos el parámetro
+	        cs.setString(1, nombreCategoria);
 
-		try (Connection conn = DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(),
-				dbConfig.getPassword()); CallableStatement cs = conn.prepareCall(sql)) {
+	        // ✅ Ahora ejecutamos la consulta
+	        try (ResultSet rs = cs.executeQuery()) {
 
-			cs.setString(1, nombreCategoria);
+	            Map<Long, Productos> productosMap = new HashMap<>();
 
-			try (ResultSet rs = cs.executeQuery()) {
-				while (rs.next()) {
-					Productos producto = new Productos();
-					producto.setIdProducto(rs.getLong("id_producto"));
-					producto.setNombre(rs.getString("nombre_producto"));
-					producto.setDescripcion(rs.getString("descripcion_producto"));
+	            while (rs.next()) {
+	                Long idProducto = rs.getLong("id_producto");
 
-					// ✅ Crear y asignar el objeto categoría completo
-					CategoriasModels categoria = new CategoriasModels();
-					categoria.setIdCategoria(rs.getInt("id_categoria"));
-					categoria.setNombreCategoria(rs.getString("nombre_categoria"));
+	                Productos producto = productosMap.get(idProducto);
+	                if (producto == null) {
+	                    producto = new Productos();
+	                    producto.setIdProducto(idProducto);
+	                    producto.setNombre(rs.getString("nombre_producto"));
+	                    producto.setDescripcion(rs.getString("descripcion_producto"));
 
-					producto.setCategoria(categoria);
+	                    CategoriasModels categoria = new CategoriasModels();
+	                    categoria.setIdCategoria(rs.getInt("id_categoria"));
+	                    categoria.setNombreCategoria(rs.getString("nombre_categoria"));
+	                    producto.setCategoria(categoria);
 
-					productosList.add(producto);
-				}
-			}
+	                    producto.setImagen(new ArrayList<>());
+	                    productosMap.put(idProducto, producto);
+	                }
 
-			LOG.info("✅ Consulta exitosa, productos encontrados: {}", productosList.size());
-			return productosList;
+	                Long idImagen = rs.getLong("id_imagen");
+	                String urlImagen = rs.getString("url_imagen");
+	                if (urlImagen != null) {
+	                    Imagenes imagen = new Imagenes();
+	                    imagen.setIdImagen(idImagen);
+	                    imagen.setUrlImagen(urlImagen);
+	                    producto.getImagen().add(imagen);
+	                }
+	            }
 
-		} catch (SQLException e) {
-			LOG.error("❌ Error al consultar categorías: ", e);
-			return Collections.emptyList();
-		}
+	            productosList.addAll(productosMap.values());
+	        }
+
+	        LOG.info("✅ Consulta exitosa, productos encontrados: {}", productosList.size());
+	        return productosList;
+
+	    } catch (SQLException e) {
+	        LOG.error("❌ Error al consultar productos por categoría: ", e);
+	        return Collections.emptyList();
+	    }
 	}
+
 
 	
 	
