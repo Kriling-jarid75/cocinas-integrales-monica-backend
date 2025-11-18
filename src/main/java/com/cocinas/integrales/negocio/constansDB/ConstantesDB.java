@@ -14,7 +14,7 @@ public enum ConstantesDB {
 	consultar_todos_produtos("{CALL sp_consulta_todos_productos()}"),
 	registro_productos("{CALL sp_registro_productos(?, ?, ?, ?)}"),
 	editar_producto(""),
-	eliminar_producto(""),
+	eliminar_producto("{CALL sp_eliminar_id_producto(?)}"),
 	
 	
 	/* SP DE CATEGORIAS */
@@ -24,7 +24,9 @@ public enum ConstantesDB {
 	consultar_producto_por_categoria("{CALL sp_consulta_productos_por_categoria(?)}"),
 	
 	registrar_categoria("{CALL sp_registro_categorias(?)}"),
-	editar_categoria(""),
+	
+	editar_categoria("{CALL sp_editar_categorias(?,?)}"),
+	
 	eliminar_categoria(""),
 	
 	

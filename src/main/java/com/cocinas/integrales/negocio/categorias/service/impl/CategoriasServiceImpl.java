@@ -15,73 +15,77 @@ import com.cocinas.integrales.negocio.productos.service.impl.ServicioProductos;
 
 @Service
 public class CategoriasServiceImpl {
-	
-	
+
 	private final ServicioProductos productoService;
 	private final CategoriasDao vamosAlDaoDeCategorias;
 
-	    // 🔹 Inyección por constructor (recomendada)
-	    public CategoriasServiceImpl(ServicioProductos productoService,
-	    		CategoriasDao vamosAlDaoDeCategorias) {
-	        this.productoService = productoService;
-	        this.vamosAlDaoDeCategorias = vamosAlDaoDeCategorias;
-	    }
-	    
-	    
-	 
-	
 	public final List<CategoriasModels> todosLasCategorias = new ArrayList<>();
 	private int nextId = 1; // Contador para asignar IDs automáticamente
-	
-	
-//	 public List<CategoriasModels> agregarCategorias(CategoriasModels req) {
-//    	 if (req.getIdCategoria() == 0) {
-//    		 req.setIdCategoria(nextId++);
-//         }
-//    	     	
-//    	 todosLasCategorias.add(req);
-//		return todosLasCategorias;
-//	}
-//	 
-	 
-	 
-	 public String agregarCategorias(CategoriasModels req) {
-			try {
-				boolean registrado = vamosAlDaoDeCategorias.registrarCategoriasDao(req);
 
-				if (registrado) {
-					return "Categoria registrado exitosamente.";
-				} else {
-					return "No se pudo registrar la categoria. Verifique los datos.";
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				return "Ocurrió un error al registrar la categoria: " + e.getMessage();
+	// 🔹 Inyección por constructor (recomendada)
+	public CategoriasServiceImpl(ServicioProductos productoService, CategoriasDao vamosAlDaoDeCategorias) {
+		this.productoService = productoService;
+		this.vamosAlDaoDeCategorias = vamosAlDaoDeCategorias;
+	}
+
+	public List<CategoriasModels> obtenerTodasLasCategorias() {
+
+		List<CategoriasModels> listaDeCategorias = new ArrayList<>();
+
+		listaDeCategorias = vamosAlDaoDeCategorias.consultarCategoriasDao();
+
+		return listaDeCategorias;
+	}
+	
+	
+	public List<Productos> getProductosPorCategoria(String categoria) {
+
+		List<Productos> listaDeProductosPorCategoria = vamosAlDaoDeCategorias
+				.consultarProdutoPorCategoriaDao(categoria);
+
+		return listaDeProductosPorCategoria;
+	}
+
+ 
+
+	public String agregarCategorias(CategoriasModels req) {
+		try {
+			boolean registrado = vamosAlDaoDeCategorias.registrarCategoriasDao(req);
+
+			if (registrado) {
+				return "Categoria registrado exitosamente.";
+			} else {
+				return "No se pudo registrar la categoria. Verifique los datos.";
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "Ocurrió un error al registrar la categoria: " + e.getMessage();
 		}
-	 
-	 
-	 
-	 public List<CategoriasModels> obtenerTodasLasCategorias() {
-		 
-		 List<CategoriasModels> listaDeCategorias = new ArrayList<>();
-		 
-		 listaDeCategorias = vamosAlDaoDeCategorias.consultarCategoriasDao();
-		 
-		 return listaDeCategorias;
-	 }
-	 
-	 
-	 
-	 
+	}
+	
+	public String editarCategorias(CategoriasModels req) {
+		try {
+			boolean editado = vamosAlDaoDeCategorias.actualizarCategoriasDao(req);
+
+			if (editado) {
+				return "Categoria actualizada exitosamente.";
+			} else {
+				return "No se pudo actualizar la categoria. Verifique los datos.";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "Ocurrió un error al actualizar la categoria: " + e.getMessage();
+		}
+	}
+	
+	
 
 //	public List<CategoriasModels> getCategorias() {
 //
 //		System.out.println("Mostramos las categorias registradas "+"\n" + todosLasCategorias);
 //		return todosLasCategorias;
 //	}
-    
-	
+
 //	 public List<CategoriasModels> getCategorias() {
 //			List<CategoriasModels> categorias = new ArrayList<>();
 //			
@@ -97,19 +101,8 @@ public class CategoriasServiceImpl {
 //			System.out.println("Mostramos los productos");
 //			return categorias;
 //		}
-	    
-	    
-	    public List<Productos> getProductosPorCategoria(String categoria) {
-	    	
-	    	
-	    	
-	    	
-	    	 List<Productos> listaDeProductosPorCategoria =  vamosAlDaoDeCategorias.consultarProdutoPorCategoriaDao(categoria);
-			 
-			 return listaDeProductosPorCategoria;
-	    	
-	    	
-	    	
+
+	
 //	    			
 //	        String catNormalizada = categoria.toLowerCase().replaceAll("\\s", "").replaceAll("[áéíóú]", "a");
 //	        return productoService.getProductos().stream() 
@@ -120,8 +113,6 @@ public class CategoriasServiceImpl {
 //	                    return nombreCat.equals(catNormalizada);
 //	                })
 //	                .collect(Collectors.toList());
-	    }
-    
-   
+	
 
 }

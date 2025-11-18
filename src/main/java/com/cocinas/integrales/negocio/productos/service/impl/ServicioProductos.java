@@ -1,7 +1,6 @@
 package com.cocinas.integrales.negocio.productos.service.impl;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,22 +47,14 @@ public class ServicioProductos {
 //		todosLosProductos.add(req);
 //		return todosLosProductos;
 //	}
-	
-	
-	public List<Productos> getProductos() {
-		
-		
-		List<Productos> todosLosProductos = vamosAlDao.consultarTodosLosProductosDao();
-	
-	return todosLosProductos;
-}
-	
-	
-	
-	
-	
-	
 
+	public List<Productos> getProductos() {
+
+		List<Productos> todosLosProductos = vamosAlDao.consultarTodosLosProductosDao();
+
+		return todosLosProductos;
+	}
+	
 	public String agregarProductos(Productos req) {
 		try {
 			boolean registrado = vamosAlDao.registrarProductoDao(req);
@@ -75,6 +66,7 @@ public class ServicioProductos {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			LOG.info("Ocurrió un error al eliminado el producto: " + e.getMessage()); 
 			return "Ocurrió un error al registrar el producto: " + e.getMessage();
 		}
 	}
@@ -104,5 +96,26 @@ public class ServicioProductos {
 //	public boolean eliminarProducto(Productos productoEliminado) {
 //		return todosLosProductos.removeIf(p -> p.getIdProducto().equals(productoEliminado.getIdProducto()));
 //	}
+	
+	
+	public boolean eliminarProductos(Productos req) {
+		
+		boolean banderaPrincipal = false;
+		
+		try {
+			boolean eliminado = vamosAlDao.eliminarIDProductoDao(req);
+
+			if (eliminado) {
+				return banderaPrincipal = true;
+			} else {
+				return banderaPrincipal = false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOG.info("Ocurrió un error al eliminado el producto: " + e.getMessage()); 
+		}
+		
+		return banderaPrincipal;
+	}
 
 }

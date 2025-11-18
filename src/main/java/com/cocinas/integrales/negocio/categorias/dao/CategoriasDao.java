@@ -157,4 +157,29 @@ public class CategoriasDao {
             return false;
         }
     }
+	
+	public boolean actualizarCategoriasDao(CategoriasModels categorias) {
+
+		String sql = ConstantesDB.editar_categoria.getQuery();
+
+		try (Connection conn = DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(),
+				dbConfig.getPassword()); CallableStatement cs = conn.prepareCall(sql)) {
+
+			// 🔹 Parámetros de entrada
+			cs.setInt(1, categorias.getIdCategoria());
+			cs.setString(2, categorias.getNombreCategoria());
+
+			// 🔹 Ejecutamos el SP
+			int rowsAffected = cs.executeUpdate();
+
+			LOG.info("✅ La categoria se actualizo correctamente, filas afectadas: {}", rowsAffected);
+			return rowsAffected > 0;
+
+		} catch (SQLException e) {
+			LOG.error("❌ Error al actualizar la categoria: ", e);
+			return false;
+		}
+	}
+	
+	
 }

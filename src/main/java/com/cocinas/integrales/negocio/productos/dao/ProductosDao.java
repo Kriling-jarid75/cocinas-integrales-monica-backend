@@ -105,23 +105,6 @@ public class ProductosDao {
 	    }
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 	public boolean registrarProductoDao(Productos producto) {
 
 		String sql = ConstantesDB.registro_productos.getQuery();
@@ -154,6 +137,33 @@ public class ProductosDao {
 
         } catch (SQLException e) {
             LOG.error("❌ Error al registrar producto: ", e);
+            return false;
+        }
+    }
+	
+	public boolean eliminarIDProductoDao(Productos producto) {
+
+		String sql = ConstantesDB.eliminar_producto.getQuery();
+
+		
+
+        try (Connection conn = DriverManager.getConnection(
+                dbConfig.getUrl(),
+                dbConfig.getUsername(),
+                dbConfig.getPassword());
+             CallableStatement cs = conn.prepareCall(sql)) {
+
+            // 🔹 Parámetros de entrada
+            cs.setLong(1, producto.getIdProducto());
+            
+            // 🔹 Ejecutamos el SP
+            int rowsAffected = cs.executeUpdate();
+
+            LOG.info("✅ Producto eliminado correctamente, filas afectadas: {}", rowsAffected);
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            LOG.error("❌ Error al eliminar producto: ", e);
             return false;
         }
     }

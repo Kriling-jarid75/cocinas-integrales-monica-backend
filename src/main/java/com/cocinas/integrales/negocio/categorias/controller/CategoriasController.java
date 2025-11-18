@@ -31,34 +31,6 @@ public class CategoriasController {
 	}
 
 	
-	/*REGISTRAMOS LAS CATEGORIAS*/
-	@PostMapping("/categoria/registro")
-	public ResponseEntity<GenericResponse<String>> accountLAM(@RequestBody CategoriasModels req) {
-
-		GenericResponse<String> respuesta = new GenericResponse<>();
-
-		try {
-			// Aquí llamas a tu servicio
-			serviceCategorias.agregarCategorias(req);
-
-		
-			respuesta.setCode(HttpStatus.OK.value());
-			respuesta.setMessage("Operación exitosa");
-
-			return ResponseEntity.ok(respuesta); // Retorna 200
-		} catch (Exception e) {
-			e.printStackTrace();
-
-			// Respuesta de error
-
-			respuesta.setCode(HttpStatus.BAD_REQUEST.value());
-			respuesta.setMessage("Ocurrió un error: " + e.getMessage());
-
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respuesta);
-		}
-
-	}
-	
 	/*LISTAMOS LAS CATEGORIAS*/
 	@PostMapping("/listar/categorias")
 	public ResponseEntity<GenericResponse<List<CategoriasModels>>> obtenerCategorias() {
@@ -92,35 +64,95 @@ public class CategoriasController {
 	}
 	
 	
-	/*BUSCAMOS UN PRODUCTO POR CATEGORIA*/
+	/* BUSCAMOS UN PRODUCTO POR CATEGORIA */
 	@PostMapping("/categoria/{categoria}")
-	public ResponseEntity<GenericResponse<List<Productos>>> obtenerPorCategoria(
-	        @PathVariable String categoria) {
+	public ResponseEntity<GenericResponse<List<Productos>>> obtenerPorCategoria(@PathVariable String categoria) {
 
-	    GenericResponse<List<Productos>> respuesta = new GenericResponse<>();
+		GenericResponse<List<Productos>> respuesta = new GenericResponse<>();
 
-	    try {
-	        // Filtra productos por categoría, ignorando mayúsculas, espacios y tildes
-	        List<Productos> productoFiltrado = serviceCategorias.getProductosPorCategoria(categoria);
+		try {
+			// Filtra productos por categoría, ignorando mayúsculas, espacios y tildes
+			List<Productos> productoFiltrado = serviceCategorias.getProductosPorCategoria(categoria);
 
-	        respuesta.setCode(HttpStatus.OK.value());
+			respuesta.setCode(HttpStatus.OK.value());
 
-	        if (productoFiltrado.isEmpty()) {
-	            respuesta.setMessage("No hay productos disponibles en la categoría '" + categoria + "'");
-	        } else {
-	            respuesta.setMessage("Operación exitosa");
-	        }
+			if (productoFiltrado.isEmpty()) {
+				respuesta.setMessage("No hay productos disponibles en la categoría '" + categoria + "'");
+			} else {
+				respuesta.setMessage("Operación exitosa");
+			}
 
-	        respuesta.setData(productoFiltrado);
+			respuesta.setData(productoFiltrado);
 
-	        return ResponseEntity.ok(respuesta);
+			return ResponseEntity.ok(respuesta);
 
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        respuesta.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-	        respuesta.setMessage("Ocurrió un error: " + e.getMessage());
-	        respuesta.setData(null);
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
-	    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			respuesta.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			respuesta.setMessage("Ocurrió un error: " + e.getMessage());
+			respuesta.setData(null);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
+		}
 	}
+	
+	
+	
+	
+	/*REGISTRAMOS LAS CATEGORIAS*/
+	@PostMapping("/categoria/registro")
+	public ResponseEntity<GenericResponse<String>> accountLAM(@RequestBody CategoriasModels req) {
+
+		GenericResponse<String> respuesta = new GenericResponse<>();
+
+		try {
+			// Aquí llamas a tu servicio
+			serviceCategorias.agregarCategorias(req);
+
+		
+			respuesta.setCode(HttpStatus.OK.value());
+			respuesta.setMessage("Operación exitosa");
+
+			return ResponseEntity.ok(respuesta); // Retorna 200
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			// Respuesta de error
+
+			respuesta.setCode(HttpStatus.BAD_REQUEST.value());
+			respuesta.setMessage("Ocurrió un error: " + e.getMessage());
+
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respuesta);
+		}
+
+	}
+	
+	
+	/*EDITAMOS LAS CATEGORIAS*/
+	@PostMapping("/categoria/editar")
+	public ResponseEntity<GenericResponse<String>> editarCategorias(@RequestBody CategoriasModels req) {
+
+		GenericResponse<String> respuesta = new GenericResponse<>();
+
+		try {
+			// Aquí llamas a tu servicio
+			serviceCategorias.editarCategorias(req);
+
+		
+			respuesta.setCode(HttpStatus.OK.value());
+			respuesta.setMessage("Operación exitosa");
+
+			return ResponseEntity.ok(respuesta); // Retorna 200
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			// Respuesta de error
+
+			respuesta.setCode(HttpStatus.BAD_REQUEST.value());
+			respuesta.setMessage("Ocurrió un error: " + e.getMessage());
+
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respuesta);
+		}
+
+	}
+	
 }
