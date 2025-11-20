@@ -2,32 +2,36 @@ package com.cocinas.integrales.negocio.categorias.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import com.cocinas.integrales.negocio.categorias.dao.CategoriasDao;
 import com.cocinas.integrales.negocio.categorias.model.CategoriasModels;
-import com.cocinas.integrales.negocio.productos.dao.ProductosDao;
+import com.cocinas.integrales.negocio.categorias.services.ICategoriasServices;
 import com.cocinas.integrales.negocio.productos.model.Productos;
-import com.cocinas.integrales.negocio.productos.service.impl.ServicioProductos;
 
 
 @Service
-public class CategoriasServiceImpl {
+public class CategoriasServiceImpl implements ICategoriasServices{
+	
+	private static final Logger LOG = LoggerFactory.getLogger(CategoriasServiceImpl.class);
 
-	private final ServicioProductos productoService;
+
 	private final CategoriasDao vamosAlDaoDeCategorias;
 
 	public final List<CategoriasModels> todosLasCategorias = new ArrayList<>();
-	private int nextId = 1; // Contador para asignar IDs automáticamente
+
 
 	// 🔹 Inyección por constructor (recomendada)
-	public CategoriasServiceImpl(ServicioProductos productoService, CategoriasDao vamosAlDaoDeCategorias) {
-		this.productoService = productoService;
+	
+	public CategoriasServiceImpl(CategoriasDao vamosAlDaoDeCategorias) {
 		this.vamosAlDaoDeCategorias = vamosAlDaoDeCategorias;
 	}
 
+	
+	@Override
 	public List<CategoriasModels> obtenerTodasLasCategorias() {
 
 		List<CategoriasModels> listaDeCategorias = new ArrayList<>();
@@ -37,7 +41,7 @@ public class CategoriasServiceImpl {
 		return listaDeCategorias;
 	}
 	
-	
+	@Override
 	public List<Productos> getProductosPorCategoria(String categoria) {
 
 		List<Productos> listaDeProductosPorCategoria = vamosAlDaoDeCategorias
@@ -47,7 +51,7 @@ public class CategoriasServiceImpl {
 	}
 
  
-
+	@Override
 	public String agregarCategorias(CategoriasModels req) {
 		try {
 			boolean registrado = vamosAlDaoDeCategorias.registrarCategoriasDao(req);
@@ -59,10 +63,13 @@ public class CategoriasServiceImpl {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			LOG.info("Ocurrió un error al registrar la categoria: " + e.getMessage());
 			return "Ocurrió un error al registrar la categoria: " + e.getMessage();
 		}
 	}
 	
+	
+	@Override
 	public String editarCategorias(CategoriasModels req) {
 		try {
 			boolean editado = vamosAlDaoDeCategorias.actualizarCategoriasDao(req);
@@ -74,45 +81,30 @@ public class CategoriasServiceImpl {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			LOG.info("Ocurrió un error al actualizar la categoria: " + e.getMessage());
 			return "Ocurrió un error al actualizar la categoria: " + e.getMessage();
 		}
 	}
 	
-	
+	@Override
+	public boolean eliminarCategorias(CategoriasModels req) {
 
-//	public List<CategoriasModels> getCategorias() {
-//
-//		System.out.println("Mostramos las categorias registradas "+"\n" + todosLasCategorias);
-//		return todosLasCategorias;
-//	}
+		boolean banderaPrincipal = false;
 
-//	 public List<CategoriasModels> getCategorias() {
-//			List<CategoriasModels> categorias = new ArrayList<>();
-//			
-//			// Esto está bien, se agrega un objeto de tipo CategoriasProductos
-//			categorias.add(new CategoriasModels(1,"Integrales",""));
-//			categorias.add(new CategoriasModels(2,"Electrodomésticos",""));
-//			categorias.add(new CategoriasModels(3,"Muebles",""));
-//			categorias.add(new CategoriasModels(4,"Decoración",""));
-//			categorias.add(new CategoriasModels(5,"todos",""));
-//			
-//			//categorias.removeAll(categorias);
-//
-//			System.out.println("Mostramos los productos");
-//			return categorias;
-//		}
+		try {
+			boolean eliminado = vamosAlDaoDeCategorias.eliminarIDCategoriaDao(req);
 
-	
-//	    			
-//	        String catNormalizada = categoria.toLowerCase().replaceAll("\\s", "").replaceAll("[áéíóú]", "a");
-//	        return productoService.getProductos().stream() 
-//	        		//todosLosProductos.stream()
-//	                .filter(p -> {
-//	                    String nombreCat = p.getCategoria().getNombreCategoria().toLowerCase()
-//	                                       .replaceAll("\\s", "").replaceAll("[áéíóú]", "a");
-//	                    return nombreCat.equals(catNormalizada);
-//	                })
-//	                .collect(Collectors.toList());
-	
+			if (eliminado) {
+				return banderaPrincipal = true;
+			} else {
+				return banderaPrincipal = false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOG.info("Ocurrió un error al eliminar la categoria: " + e.getMessage());
+		}
+
+		return banderaPrincipal;
+	}
 
 }

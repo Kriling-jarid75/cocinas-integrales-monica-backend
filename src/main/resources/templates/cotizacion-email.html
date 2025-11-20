@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<body style="font-family: Arial; padding: 20px;">
+ 
+<h2 style="color: #1976d2;">📩 Nueva cotización de cliente</h2>
+ 
+<p><strong>Nombre:</strong> <span th:text="${nombre}"></span></p>
+<p><strong>Correo:</strong> <span th:text="${correo}"></span></p>
+<p><strong>Asunto:</strong> <span th:text="${asunto}"></span></p>
+ 
+<h3 style="margin-top:20px;">Mensaje del cliente:</h3>
+<p th:text="${mensaje}"></p>
+ 
+<br>
+<small style="color: gray;">⚙️ Enviado desde el sistema Cocinas Integrales Mónica</small>
+ 
+</body>
+</html>

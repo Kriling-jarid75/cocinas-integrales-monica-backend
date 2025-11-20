@@ -27,10 +27,7 @@ public enum ConstantesDB {
 	
 	editar_categoria("{CALL sp_editar_categorias(?,?)}"),
 	
-	eliminar_categoria(""),
-	
-	
-	;
+	eliminar_categoria("{CALL sp_elimiar_id_categoria(?)}");
 	
 
 	// Variable de instancia para almacenar el valor asociado

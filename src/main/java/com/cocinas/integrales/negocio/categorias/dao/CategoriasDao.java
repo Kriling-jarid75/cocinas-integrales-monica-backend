@@ -25,7 +25,7 @@ import com.cocinas.integrales.negocio.productos.model.Productos;
 
 
 @Repository
-public class CategoriasDao {
+public class CategoriasDao{
 	
 	private static final Logger LOG = LoggerFactory.getLogger(CategoriasDao.class);
 
@@ -36,6 +36,7 @@ public class CategoriasDao {
 	}
 	
 	
+
 	public List<CategoriasModels> consultarCategoriasDao() {
 
 
@@ -180,6 +181,33 @@ public class CategoriasDao {
 			return false;
 		}
 	}
+	
+	public boolean eliminarIDCategoriaDao(CategoriasModels producto) {
+
+		String sql = ConstantesDB.eliminar_categoria.getQuery();
+
+		
+
+        try (Connection conn = DriverManager.getConnection(
+                dbConfig.getUrl(),
+                dbConfig.getUsername(),
+                dbConfig.getPassword());
+             CallableStatement cs = conn.prepareCall(sql)) {
+
+            // 🔹 Parámetros de entrada
+            cs.setLong(1, producto.getIdCategoria());
+            
+            // 🔹 Ejecutamos el SP
+            int rowsAffected = cs.executeUpdate();
+
+            LOG.info("✅ Categoria eliminada correctamente, filas afectadas: {}", rowsAffected);
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            LOG.error("❌ Error al eliminar la categoria: ", e);
+            return false;
+        }
+    }
 	
 	
 }

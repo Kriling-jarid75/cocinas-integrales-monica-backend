@@ -1,7 +1,9 @@
 package com.cocinas.integrales.negocio.productos.services;
 
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import java.util.List;
+
+
 
 import com.cocinas.integrales.negocio.productos.model.Productos;
 
@@ -9,6 +11,10 @@ import com.cocinas.integrales.negocio.productos.model.Productos;
 
 public interface IServicioProductos {
 
-	String registroProductos(Productos productosRequest) throws UsernameNotFoundException;
+	List<Productos> getProductos();
+
+	String agregarProductos(Productos req);
+
+	boolean eliminarProductos(Productos req);
 
 }
