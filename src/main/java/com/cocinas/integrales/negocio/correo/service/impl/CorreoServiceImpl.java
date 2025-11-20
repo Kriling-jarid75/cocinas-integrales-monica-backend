@@ -1,6 +1,7 @@
 package com.cocinas.integrales.negocio.correo.service.impl;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ import jakarta.mail.internet.MimeMessage;
 public class CorreoServiceImpl {
 
 
+	@Value("${app.mail.from}")
+    private String correoFrom;
 
 	private final JavaMailSender mailSender;
 	private final SpringTemplateEngine templateEngine;
