@@ -31,7 +31,7 @@ public class CorreoController {
     public ResponseEntity<GenericResponse<String>> enviarCorreo(@RequestBody CorreoRequest request) {
         GenericResponse<String> respuesta = new GenericResponse<>();
         try {
-           // correoService.enviarCorreo(request);
+           correoService.enviarCorreo(request);
         	
         	
         	System.out.println("Mostramos lo enviado desde el correo " + "--" + request.toString());

@@ -11,7 +11,7 @@ public class CorreoRequest {
 	
 	private String nombreCliente;
 	private String correoCliente;
-	private String asuntoCliente;
+	private AsuntoCorreo asuntoCliente;
 	private String mensajeCliente;
 
 }

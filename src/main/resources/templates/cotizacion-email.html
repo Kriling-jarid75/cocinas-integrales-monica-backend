@@ -1,18 +1,170 @@
 <!DOCTYPE html>
-<html>
-<body style="font-family: Arial; padding: 20px;">
- 
-<h2 style="color: #1976d2;">📩 Nueva cotización de cliente</h2>
- 
-<p><strong>Nombre:</strong> <span th:text="${nombre}"></span></p>
-<p><strong>Correo:</strong> <span th:text="${correo}"></span></p>
-<p><strong>Asunto:</strong> <span th:text="${asunto}"></span></p>
- 
-<h3 style="margin-top:20px;">Mensaje del cliente:</h3>
-<p th:text="${mensaje}"></p>
- 
-<br>
-<small style="color: gray;">⚙️ Enviado desde el sistema Cocinas Integrales Mónica</small>
- 
-</body>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitud de Cotización</title>
+    <style>
+       
+        
+        body {
+            font-family: Arial, sans-serif;
+            padding: 0;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+
+        .estiloTabla1 {
+            width: 100%;
+            background-color: #ffffff;
+            padding: 15px 0;
+            border-bottom: 2px solid #1976d2;
+        }
+
+        .imgHeader {
+            width: 180px;
+            margin-bottom: 5px;
+        }
+
+        .tituloHeader {
+            color: #444;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .contenidoPrincipal {
+            padding: 20px;
+            background-color: #ffffff;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 8px;
+        }
+
+        .subtituloPrincipal {
+            color: #1976d2;
+        }
+
+        .content-title {
+            text-align: center;
+            font-size: 26px;
+            color: #1976d2;
+            margin-bottom: 5px;
+        }
+
+        .content-subtitle {
+            text-align: center;
+            font-size: 17px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        .mensajeDelCliente {
+            margin-top: 20px;
+            color: #333;
+        }
+
+        .pieDePagina {
+            width: 100%;
+            background-color: #eeeeee;
+            padding: 15px 0;
+            margin-top: 20px;
+        }
+
+        .pieDePaginaTD {
+            text-align: center
+        }
+
+        .derechos {
+            margin: 0;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .derechos2 {
+            margin: 5px 0 0;
+            font-size: 12px;
+            color: #777;
+        }
+
+        .fechaSolicitud {
+            color: #777;
+            margin: 4px 0 0;
+            font-size: 13px;
+        }
+
+
+        /* ----- MEDIA QUERIES RESPONSIVE ----- */
+        @media only screen and (max-width: 600px) {
+            .container {
+                width: 95% !important;
+                padding: 15px !important;
+            }
+
+            .header-img {
+                width: 140px !important;
+            }
+
+            .content-title {
+                font-size: 20px !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <body>
+
+        <!-- ===================== NAVBAR / HEADER ====================== -->
+        <table class="estiloTabla1">
+            <tr>
+                <td class="pieDePaginaTD">
+                    <img src="cid:image1" alt="Cocinas Integrales Mónica" class="imgHeader">
+                    <!--<img src="Cocinas_Integrales_Monica.png" alt="Integrales Mónica" class="imgHeader">-->
+                    <p class="tituloHeader">
+                        Sistema profesional de cotizaciones
+                    </p>
+                    <p class="fechaSolicitud">
+                        Fecha de solicitud: <span th:text="${fecha}"></span>
+                    </p>
+                </td>
+            </tr>
+        </table>
+
+        <!-- ===================== CONTENIDO PRINCIPAL ====================== -->
+        <div class="contenidoPrincipal">
+
+            <h1 class="content-title">Nueva cotización</h1>
+            <p class="content-subtitle">📩 Información del cliente</p>
+
+            <p><strong>Asunto:</strong> <span th:text="${asunto}"></span></p>
+            <p><strong>Nombre:</strong> <span th:text="${nombre}"></span></p>
+            <p><strong>Correo:</strong> <span th:text="${correo}"></span></p>
+
+
+            <h3 class="mensajeDelCliente">Mensaje:</h3>
+            <p th:text="${mensaje}"></p>
+
+        </div>
+
+        <!-- ===================== FOOTER ====================== -->
+        <table class="pieDePagina">
+            <tr>
+                <td class="pieDePaginaTD">
+                    <p class="derechos">
+                        © 2025 Cocinas Integrales Mónica — Todos los derechos reservados.
+                    </p>
+                    <p class="derechos2">
+                        Este mensaje fue generado automáticamente por el sistema.
+                    </p>
+                </td>
+            </tr>
+        </table>
+    </body>
+
 </html>
+
+
