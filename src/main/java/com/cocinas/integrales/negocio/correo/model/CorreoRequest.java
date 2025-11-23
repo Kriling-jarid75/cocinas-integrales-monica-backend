@@ -10,7 +10,7 @@ import lombok.ToString;
 public class CorreoRequest {
 	
 	private String nombreCliente;
-	private String correoCliente;
+	private String correo_telefono_Cliente;
 	private AsuntoCorreo asuntoCliente;
 	private String mensajeCliente;
 

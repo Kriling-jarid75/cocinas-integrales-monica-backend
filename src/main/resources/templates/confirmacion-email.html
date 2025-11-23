@@ -2,148 +2,170 @@
 <html lang="es">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Confirmación de solicitud</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de solicitud</title>
 
-	<style>
-		body {
-			font-family: Arial, sans-serif;
-			padding: 0;
-			margin: 0;
-			background-color: #f5f5f5;
-		}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 0;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
 
-		.header {
-			width: 100%;
-			background-color: #ffffff;
-			padding: 15px 0;
-			border-bottom: 2px solid #1976d2;
-			text-align: center;
-		}
+        .header {
+            width: 100%;
+            background-color: #ffffff;
+            padding: 15px 0;
+            border-bottom: 2px solid #1976d2;
+            text-align: center;
+        }
 
-		.imgHeader {
-			width: 180px;
-			margin-bottom: 5px;
-		}
+        .imgHeader {
+            width: 180px;
+            margin-bottom: 5px;
+        }
 
-		.subHeader {
-			color: #444;
-			margin: 0;
-			font-size: 14px;
-		}
+        .subHeader {
+            color: #444;
+            margin: 0;
+            font-size: 14px;
+        }
 
-		.dateText {
-			color: #777;
-			margin: 4px 0 0;
-			font-size: 13px;
-		}
+        .dateText {
+            color: #777;
+            margin: 4px 0 0;
+            font-size: 13px;
+        }
 
-		.content {
-			background-color: #ffffff;
-			margin: 20px auto;
-			padding: 20px;
-			width: 90%;
-			max-width: 600px;
-			border-radius: 8px;
-		}
+        .content {
+            background-color: #ffffff;
+            margin: 20px auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 8px;
+        }
 
-		.title {
-			color: #1976d2;
-		}
+        .title {
+            color: #1976d2;
+        }
 
-		.footer {
-			width: 100%;
-			background-color: #eeeeee;
-			padding: 15px 0;
-			margin-top: 20px;
-			text-align: center;
-		}
+        .footer {
+            width: 100%;
+            background-color: #eeeeee;
+            padding: 15px 0;
+            margin-top: 20px;
+            text-align: center;
+        }
 
-		.footerText1 {
-			margin: 0;
-			font-size: 12px;
-			color: #666;
-		}
+        .footerText1 {
+            margin: 0;
+            font-size: 12px;
+            color: #666;
+        }
 
-		.footerText2 {
-			margin: 5px 0 0;
-			font-size: 12px;
-			color: #777;
-		}
+        .footerText2 {
+            margin: 5px 0 0;
+            font-size: 12px;
+            color: #777;
+        }
 
-		/* Responsive */
-		@media only screen and (max-width: 480px) {
-			.imgHeader {
-				width: 140px;
-			}
+        .social-icons img {
+            width: 26px;
+            height: 26px;
+            margin: 0 8px;
+            vertical-align: middle;
+        }
 
-			.content {
-				padding: 15px;
-			}
+        /* Responsive */
+        @media only screen and (max-width: 480px) {
+            .imgHeader {
+                width: 140px;
+            }
 
-			.title {
-				font-size: 20px;
-			}
-		}
-	</style>
+            .content {
+                padding: 15px;
+            }
+
+            .title {
+                font-size: 20px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-	<!-- HEADER -->
-	<table class="header">
-		<tr>
-			<td>
-				<img src="cid:image1" alt="Cocinas Integrales Mónica" class="imgHeader">
-				<p class="subHeader">Sistema profesional de cotizaciones</p>
-				<p class="dateText">Fecha de solicitud: <span th:text="${fecha}"></span></p>
-			</td>
-		</tr>
-	</table>
+    <!-- HEADER -->
+    <table class="header">
+        <tr>
+            <td>
+                <img src="cid:image1" alt="Cocinas Integrales Mónica" class="imgHeader">
+                <p class="subHeader">Sistema profesional de cotizaciones</p>
+                <p class="dateText">Fecha de solicitud: <span th:text="${fecha}"></span></p>
+            </td>
+        </tr>
+    </table>
 
-	<!-- CONTENT -->
-	<div class="content">
-		<h2 class="title">¡Gracias por tu solicitud! 🙌</h2>
+    <!-- CONTENT -->
+    <div class="content">
+        <h2 class="title">¡Gracias por tu solicitud! 🙌</h2>
 
-		<p>
-			Hola <strong><span th:text="${nombre}"></span></strong>,
-		</p>
+        <p>
+            Hola <strong><span th:text="${nombre}"></span></strong>,
+        </p>
 
-		<p>
-			Hemos recibido tu solicitud de cotización correctamente.
-			Nuestro equipo de <strong>Cocinas Integrales Mónica</strong> revisará tu mensaje y
-			se comunicará contigo lo antes posible.
-		</p>
+        <p>
+            Hemos recibido tu solicitud de cotización correctamente.
+            Nuestro equipo de <strong>Cocinas Integrales Mónica</strong> revisará tu mensaje y
+            se comunicará contigo lo antes posible.
+        </p>
 
-		<p>
-			<strong>Resumen de tu solicitud:</strong>
-		</p>
+        <p>
+            <strong>Resumen de tu solicitud:</strong>
+        </p>
 
-		<p><strong>Correo:</strong> <span th:text="${correo}"></span></p>
-		<p><strong>Asunto:</strong> <span th:text="${asunto}"></span></p>
+        <p><strong>Correo:</strong> <span th:text="${correo}"></span></p>
+        <p><strong>Asunto:</strong> <span th:text="${asunto}"></span></p>
 
-		<p style="margin-top: 20px;"><strong>Tu mensaje:</strong></p>
-		<p th:text="${mensaje}"></p>
+        <p style="margin-top: 20px;"><strong>Tu mensaje:</strong></p>
+        <p th:text="${mensaje}"></p>
 
-		<p style="margin-top: 25px;">
-			Si necesitas agregar más información o tienes dudas, puedes responder a este correo.
-		</p>
+        <p style="margin-top: 25px;">
+            Si necesitas agregar más información o tienes dudas, puedes responder a este correo.
+        </p>
 
-		<p style="margin-top: 15px;">Gracias por confiar en nosotros.</p>
+        <p style="margin-top: 15px;">Gracias por confiar en nosotros.</p>
 
-		<p><strong>— Cocinas Integrales Mónica</strong></p>
-	</div>
+        <p><strong>— Cocinas Integrales Mónica</strong></p>
+    </div>
 
-	<!-- FOOTER -->
-	<table class="footer">
-		<tr>
-			<td>
-				<p class="footerText1">© 2025 Cocinas Integrales Mónica — Todos los derechos reservados.</p>
-				<p class="footerText2">Este mensaje fue generado automáticamente por el sistema.</p>
-			</td>
-		</tr>
-	</table>
+    <!-- FOOTER -->
+    <table class="footer">
+        <tr>
+            <td>
+
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/profile.php?id=100008879267382" target="_blank">
+                        <img src="https://img.icons8.com/fluency/96/facebook-new.png" width="42" alt="Logo de Facebook"/>
+                    </a>
+                    <a href="https://www.instagram.com/cocintra_monica/" target="_blank">
+                        <img src="https://img.icons8.com/fluency/96/instagram-new.png" width="42" alt="Logo de Instagram"/>
+                    </a>
+
+                </div>
+
+                <p class="footerText2">Siguenos en nuestras redes sociales</p> <br>
+
+
+
+                <p class="footerText1">© 2025 Cocinas Integrales Mónica — Todos los derechos reservados.</p>
+                <p class="footerText2">Este mensaje fue generado automáticamente por el sistema.</p>
+            </td>
+        </tr>
+    </table>
 
 </body>
 

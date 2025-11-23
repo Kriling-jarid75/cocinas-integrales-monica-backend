@@ -6,8 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solicitud de Cotización</title>
     <style>
-       
-        
+        body,
+        table,
+        td,
+        p {
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: Arial, sans-serif;
             padding: 0;
@@ -40,6 +46,7 @@
             width: 90%;
             max-width: 600px;
             border-radius: 8px;
+            height: 420px;
         }
 
         .subtituloPrincipal {
@@ -70,7 +77,16 @@
             width: 100%;
             background-color: #eeeeee;
             padding: 15px 0;
-            margin-top: 20px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+        }
+
+        .social-icons img {
+            width: 26px;
+            height: 26px;
+            margin: 0 8px;
+            vertical-align: middle;
         }
 
         .pieDePaginaTD {
@@ -140,20 +156,42 @@
             <h1 class="content-title">Nueva cotización</h1>
             <p class="content-subtitle">📩 Información del cliente</p>
 
-            <p><strong>Asunto:</strong> <span th:text="${asunto}"></span></p>
-            <p><strong>Nombre:</strong> <span th:text="${nombre}"></span></p>
-            <p><strong>Correo:</strong> <span th:text="${correo}"></span></p>
+            <p class="info-row">
+                <strong>Asunto:</strong> <span th:text="${asunto}"></span>
+            </p>
 
+            <p class="info-row">
+                <strong>Nombre:</strong> <span th:text="${nombre}"></span>
+            </p>
 
-            <h3 class="mensajeDelCliente">Mensaje:</h3>
-            <p th:text="${mensaje}"></p>
+            <p class="info-row">
+                <strong>Correo ó Teléfono:</strong> <span th:text="${correo}"></span>
+            </p>
+
+            <h3 class="mensajeDelCliente">Mensaje del cliente:</h3>
+            <p class="mensajeTexto" th:text="${mensaje}"></p>
 
         </div>
+
 
         <!-- ===================== FOOTER ====================== -->
         <table class="pieDePagina">
             <tr>
                 <td class="pieDePaginaTD">
+
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/profile.php?id=100008879267382" target="_blank">
+							<img src="https://img.icons8.com/fluency/96/facebook-new.png" width="42" alt="Logo Facebook"/>
+                        </a>
+                        <a href="https://www.instagram.com/cocintra_monica/" target="_blank">
+							<img src="https://img.icons8.com/fluency/96/instagram-new.png" width="42" alt="Logo de Instagram"/>
+                        </a>
+                        
+                    </div>
+
+                    <p class="derechos">Siguenos en nuestras redes sociales</p> <br>
+
+
                     <p class="derechos">
                         © 2025 Cocinas Integrales Mónica — Todos los derechos reservados.
                     </p>
@@ -163,8 +201,7 @@
                 </td>
             </tr>
         </table>
+
     </body>
 
 </html>
-
-
