@@ -9,7 +9,8 @@ import lombok.ToString;
 @Setter
 @ToString
 public class CategoriasModels {
-	private int idCategoria;
+	private Long idCategoria;
 	private String nombreCategoria;
+	private boolean enUso;
 
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -20,9 +21,39 @@ public class CloudinaryService {
                 "api_secret", "UmRjjWXmJym3jrdq8zjqvksDKhQ"));
     }
 
-    public String subirImagen(MultipartFile archivo) throws IOException {
+    public Map<String, String> subirImagen(MultipartFile archivo) throws IOException {
         Map uploadResult = cloudinary.uploader().upload(archivo.getBytes(),
                 ObjectUtils.asMap("folder", "productos"));
-        return uploadResult.get("secure_url").toString(); // retorna la URL de la imagen
+        
+        String url = uploadResult.get("secure_url").toString();
+        String publicId = uploadResult.get("public_id").toString();
+        
+        //enviamos ambos valores al service de productos
+        Map<String, String> resultado = new HashMap<>();
+        resultado.put("url", url);
+        resultado.put("public_id", publicId);
+       
+        return resultado; 
+    }
+    
+    
+ // ✅ Método para eliminar una imagen
+//    public boolean eliminarImagen(String publicId) {
+//        try {
+//            Map result = cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+//            return "ok".equals(result.get("result")); // devuelve true si se eliminó correctamente
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
+    
+    public boolean deteleImageCloudinary(String idImagen) throws IOException {
+    	 Map result = cloudinary.uploader().destroy(idImagen, ObjectUtils.emptyMap());
+    	 
+    	 System.out.println("--------------- mostramos la respuesta ----------------------" + result);
+    	 
+    	 
+       return "ok".equals(result.get("result")); // devuelve true si se eliminó correctamente
     }
 }

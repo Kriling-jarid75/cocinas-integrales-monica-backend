@@ -17,4 +17,6 @@ public interface ICategoriasServices {
 
 	boolean eliminarCategorias(CategoriasModels req);
 
+	CategoriasModels obtenerCategoriaPorId(Long idCategoria);
+
 }

@@ -71,7 +71,7 @@ public class ProductosDao {
 
 	                // Crear objeto categoría
 	                CategoriasModels categoria = new CategoriasModels();
-	                categoria.setIdCategoria(rs.getInt("id_categoria"));
+	                categoria.setIdCategoria(rs.getLong("id_categoria"));
 	                categoria.setNombreCategoria(rs.getString("nombre_categoria"));
 	                producto.setCategoria(categoria);
 
@@ -83,13 +83,16 @@ public class ProductosDao {
 
 	            // Agregar imagen (si existe)
 	            Long idImagen = rs.getLong("id_imagen");
-	            String nombreImagen = rs.getString("nombreImagen");
+	            String nombreImagen = rs.getString("nombre_imagen");
 	            String rutaImagen = rs.getString("url_imagen");
+	            String id_imagen_cloudinary = rs.getString("public_id");
+	            
 	            if (idImagen != 0 && rutaImagen != null) {
 	                Imagenes imagen = new Imagenes();
 	                imagen.setIdImagen(idImagen);
-	                imagen.setNombreImagen(nombreImagen);
-	                imagen.setUrlImagen(rutaImagen);
+	                imagen.setNombre_imagen(nombreImagen);
+	                imagen.setUrl_imagen(rutaImagen);
+	                imagen.setPublic_id(id_imagen_cloudinary);
 	                producto.getImagen().add(imagen);
 	            }
 	        }
@@ -120,7 +123,7 @@ public class ProductosDao {
             // 🔹 Parámetros de entrada
             cs.setString(1, producto.getNombre());
             cs.setString(2, producto.getDescripcion());
-            cs.setInt(3, producto.getCategoria().getIdCategoria());
+            cs.setLong(3, producto.getCategoria().getIdCategoria());
 
             // 🔹 Convertimos lista de imágenes a JSON (para el SP)
            String imagenesJson = new Gson().toJson(producto.getImagen());
@@ -140,6 +143,37 @@ public class ProductosDao {
             return false;
         }
     }
+	
+	public boolean actualizarProductoDao(Productos productos) {
+
+		String sql = ConstantesDB.editar_producto.getQuery();
+
+		try (Connection conn = DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(),
+				dbConfig.getPassword()); CallableStatement cs = conn.prepareCall(sql)) {
+
+			cs.setLong(1, productos.getIdProducto());
+			cs.setString(2, productos.getNombre());
+			cs.setLong(3, productos.getCategoria().getIdCategoria());
+			cs.setString(4, productos.getDescripcion());
+
+			// 🔹 Convertimos lista de imágenes a JSON (para el SP)
+			String imagenesJson = new Gson().toJson(productos.getImagen());
+
+			cs.setString(5, imagenesJson);
+
+			int rowsAffected = cs.executeUpdate();
+
+			LOG.info("✅ El producto se actualizó correctamente, filas afectadas: {}", rowsAffected);
+
+			
+
+			return rowsAffected > 0;
+
+		} catch (SQLException e) {
+			LOG.error("❌ Error al actualizar el producto: ", e);
+			return false;
+		}
+	}
 	
 	public boolean eliminarIDProductoDao(Productos producto) {
 
@@ -167,5 +201,38 @@ public class ProductosDao {
             return false;
         }
     }
+
+
+
+	public Productos obtenerIdDeProducto(Long idProducto) {
+		 
+	    String sql = ConstantesDB.busqueda_por_id_producto.getQuery();
+	 
+	    Productos pro = new Productos();
+	 
+	    try (Connection conn = DriverManager.getConnection(
+	            dbConfig.getUrl(),
+	            dbConfig.getUsername(),
+	            dbConfig.getPassword());
+	         CallableStatement cs = conn.prepareCall(sql)) {
+	 
+	        // 🔹 Parámetro de entrada
+	        cs.setLong(1, idProducto);
+	 
+	        // 🔹 Ejecutar query después de setear parámetros
+	        try (ResultSet rs = cs.executeQuery()) {
+	            while (rs.next()) {
+	                pro.setIdProducto(rs.getLong("id_producto"));
+	                // puedes setear otros campos si quieres
+	            }
+	        }
+	 
+	    } catch (SQLException e) {
+	        LOG.error("❌ Error al consultar el ID del producto: ", e);
+	        return pro;
+	    }
+	 
+	    return pro;
+	}
 
 }

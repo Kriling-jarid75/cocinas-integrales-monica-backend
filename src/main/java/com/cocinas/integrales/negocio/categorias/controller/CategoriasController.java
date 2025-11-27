@@ -1,7 +1,10 @@
 package com.cocinas.integrales.negocio.categorias.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,7 +26,9 @@ import com.cocinas.integrales.negocio.productos.model.Productos;
 @RequestMapping("/api/gestion")
 public class CategoriasController {
 	
-	private CategoriasServiceImpl serviceCategorias;
+	private static final Logger LOG = LoggerFactory.getLogger(CategoriasController.class);
+	
+	private final CategoriasServiceImpl serviceCategorias;
 	
 	public CategoriasController(CategoriasServiceImpl serviceCategirias){
 		this.serviceCategorias = serviceCategirias;
@@ -56,12 +61,12 @@ public class CategoriasController {
 			} else {
 				// Caso 2: La lista está vacía (NOT FOUND 404 o OK 200 con mensaje)
 				// Usar 404 (Not Found) es semánticamente correcto si esperas encontrar algo.
-				respuesta.setCode(HttpStatus.NOT_FOUND.value());
-				respuesta.setMessage("No se encontraron categorias disponibles en la base de datos.");
-				respuesta.setData(todosLasCategorias); // Devuelve la lista vacía si lo prefieres
+				respuesta.setCode(HttpStatus.NO_CONTENT.value()); // 204
+                respuesta.setMessage("No hay productos registrados.");
+                respuesta.setData(new ArrayList<>());
 
-				// Devuelve la respuesta con el estado HTTP 404
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respuesta);
+                //
+                return ResponseEntity.ok(respuesta);
 			}
 
 		} catch (Exception e) {
@@ -72,7 +77,7 @@ public class CategoriasController {
 			respuesta.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value()); // Mejor usar 500 para errores de servidor
 			respuesta.setMessage("Ocurrió un error interno del servidor: " + e.getMessage());
 			respuesta.setData(null);
-
+			 LOG.info("Error" + respuesta.getMessage());
 			// Devuelve la respuesta con el estado HTTP 500
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
 
@@ -108,6 +113,7 @@ public class CategoriasController {
 			respuesta.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			respuesta.setMessage("Ocurrió un error: " + e.getMessage());
 			respuesta.setData(null);
+			 LOG.info("Error" + respuesta.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
 		}
 	}
@@ -137,7 +143,7 @@ public class CategoriasController {
 
 			respuesta.setCode(HttpStatus.BAD_REQUEST.value());
 			respuesta.setMessage("Ocurrió un error: " + e.getMessage());
-
+			 LOG.info("Error" + respuesta.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respuesta);
 		}
 
@@ -166,7 +172,7 @@ public class CategoriasController {
 
 			respuesta.setCode(HttpStatus.BAD_REQUEST.value());
 			respuesta.setMessage("Ocurrió un error: " + e.getMessage());
-
+			 LOG.info("Error" + respuesta.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respuesta);
 		}
 
@@ -187,6 +193,7 @@ public class CategoriasController {
 			} else {
 				respuesta.setCode(HttpStatus.NOT_FOUND.value());
 				respuesta.setMessage("No se encontró la categoria con el ID especificado");
+				 LOG.info("Error" + respuesta.getMessage());
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respuesta);
 			}
 
@@ -194,6 +201,7 @@ public class CategoriasController {
 			e.printStackTrace();
 			respuesta.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			respuesta.setMessage("Error al editar el producto: " + e.getMessage());
+			 LOG.info("Error" + respuesta.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
 		}
 	}

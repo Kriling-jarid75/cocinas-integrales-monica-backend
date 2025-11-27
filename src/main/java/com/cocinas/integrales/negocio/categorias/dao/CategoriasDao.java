@@ -53,8 +53,9 @@ public class CategoriasDao{
 
 	        while (rs.next()) {
 	            CategoriasModels categoria = new CategoriasModels();
-	            categoria.setIdCategoria(rs.getInt("id_categoria"));
+	            categoria.setIdCategoria(rs.getLong("id_categoria"));
 	            categoria.setNombreCategoria(rs.getString("nombre_categoria"));
+	            categoria.setEnUso(rs.getBoolean("enUso"));
 	            categoriasList.add(categoria);
 	        }
 
@@ -99,7 +100,7 @@ public class CategoriasDao{
 	                    producto.setDescripcion(rs.getString("descripcion_producto"));
 
 	                    CategoriasModels categoria = new CategoriasModels();
-	                    categoria.setIdCategoria(rs.getInt("id_categoria"));
+	                    categoria.setIdCategoria(rs.getLong("id_categoria"));
 	                    categoria.setNombreCategoria(rs.getString("nombre_categoria"));
 	                    producto.setCategoria(categoria);
 
@@ -112,7 +113,7 @@ public class CategoriasDao{
 	                if (urlImagen != null) {
 	                    Imagenes imagen = new Imagenes();
 	                    imagen.setIdImagen(idImagen);
-	                    imagen.setUrlImagen(urlImagen);
+	                    imagen.setUrl_imagen(urlImagen);
 	                    producto.getImagen().add(imagen);
 	                }
 	            }
@@ -167,7 +168,7 @@ public class CategoriasDao{
 				dbConfig.getPassword()); CallableStatement cs = conn.prepareCall(sql)) {
 
 			// 🔹 Parámetros de entrada
-			cs.setInt(1, categorias.getIdCategoria());
+			cs.setLong(1, categorias.getIdCategoria());
 			cs.setString(2, categorias.getNombreCategoria());
 
 			// 🔹 Ejecutamos el SP
@@ -208,6 +209,47 @@ public class CategoriasDao{
             return false;
         }
     }
-	
+
+
+
+	public CategoriasModels obtenerIdDeCategoria(Long idCategoria) {
+		
+		String sql = ConstantesDB.busqueda_por_id_categoria.getQuery();
+
+	  
+		CategoriasModels categoria = new CategoriasModels();
+		
+	    try (Connection conn = DriverManager.getConnection(
+	            dbConfig.getUrl(),
+	            dbConfig.getUsername(),
+	            dbConfig.getPassword());
+	         CallableStatement cs = conn.prepareCall(sql)) {
+
+	    	 // 🔹 Parámetro de entrada
+	        cs.setLong(1, idCategoria);
+	 
+	        // 🔹 Ejecutar query después de setear parámetros
+	        try (ResultSet rs = cs.executeQuery()) {
+	            while (rs.next()) {
+	            	categoria.setIdCategoria(rs.getLong("id_categoria"));
+	                // puedes setear otros campos si quieres
+	            }
+	        }
+
+	    } catch (SQLException e) {
+	        LOG.error("❌ Error al consultar el ID de la categoria: ", e);
+	        return categoria;
+	    }
+	    
+	    
+		return categoria;
+	}
+
+
+
+	public boolean existeProductosConCategorias(Long idCategoria) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 }

@@ -3,6 +3,7 @@ package com.cocinas.integrales.negocio.productos.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,11 +18,15 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cocinas.integrales.negocio.categorias.model.CategoriasModels;
+import com.cocinas.integrales.negocio.categorias.service.impl.CategoriasServiceImpl;
 import com.cocinas.integrales.negocio.cloudinary.service.impl.CloudinaryService;
 import com.cocinas.integrales.negocio.model.GenericResponse;
 import com.cocinas.integrales.negocio.productos.model.Imagenes;
 import com.cocinas.integrales.negocio.productos.model.Productos;
 import com.cocinas.integrales.negocio.productos.service.impl.ServicioProductos;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST })
@@ -33,15 +38,19 @@ public class ProductosController {
 
 	private final ServicioProductos serviceProductos;
 	private final CloudinaryService serviceCloudinary;
+	private final CategoriasServiceImpl serviceCategorias;
 
-	public ProductosController(ServicioProductos serviceProductos,
-			CloudinaryService serviceCloudinary) {
+
+	public ProductosController(ServicioProductos serviceProductos, CloudinaryService serviceCloudinary,
+			CategoriasServiceImpl serviceCategorias) {
+		super();
 		this.serviceProductos = serviceProductos;
 		this.serviceCloudinary = serviceCloudinary;
+		this.serviceCategorias = serviceCategorias;
 	}
 
-	  @PostMapping("/productos/listar")
-	    public ResponseEntity<GenericResponse<List<Productos>>> obtenerProductos() {
+	@PostMapping("/productos/listar")
+    public ResponseEntity<GenericResponse<List<Productos>>> obtenerProductos() {
 
 	        GenericResponse<List<Productos>> respuesta = new GenericResponse<>();
 
@@ -62,12 +71,12 @@ public class ProductosController {
 	            } else {
 	                // Caso 2: La lista está vacía (NOT FOUND 404 o OK 200 con mensaje)
 	                // Usar 404 (Not Found) es semánticamente correcto si esperas encontrar algo.
-	                respuesta.setCode(HttpStatus.NOT_FOUND.value());
-	                respuesta.setMessage("No se encontraron productos disponibles en la base de datos.");
-	                respuesta.setData(todosLosProductos); // Devuelve la lista vacía si lo prefieres
+	            	respuesta.setCode(HttpStatus.NO_CONTENT.value()); // 204
+	                respuesta.setMessage("No hay productos registrados.");
+	                respuesta.setData(new ArrayList<>());
 
-	                // Devuelve la respuesta con el estado HTTP 404
-	                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respuesta);
+	                //
+	                return ResponseEntity.ok(respuesta);
 	            }
 
 	        } catch (Exception e) {
@@ -78,6 +87,7 @@ public class ProductosController {
 	            respuesta.setMessage("Ocurrió un error interno del servidor: " + e.getMessage());
 	            respuesta.setData(null);
 
+	            LOG.info("Error" + respuesta.getMessage());
 	            // Devuelve la respuesta con el estado HTTP 500
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
 	        }
@@ -103,11 +113,12 @@ public class ProductosController {
 		            System.out.println("➡️ Imagen: " + imagen.getOriginalFilename());
 
 		            // Subimos la imagen a Cloudinary
-		            String url = serviceCloudinary.subirImagen(imagen);
+		            Map<String, String> uploadResult = serviceCloudinary.subirImagen(imagen);
 
 		            Imagenes img = new Imagenes();
-		            img.setNombreImagen(imagen.getOriginalFilename());
-		            img.setUrlImagen(url); // ahora sí tiene URL real
+		            img.setNombre_imagen(imagen.getOriginalFilename());
+		            img.setUrl_imagen(uploadResult.get("url")); // ahora sí tiene URL real
+		            img.setPublic_id(uploadResult.get("public_id"));
 		            listaImagenes.add(img);
 		        }
 
@@ -125,36 +136,84 @@ public class ProductosController {
 			e.printStackTrace();
 			respuesta.setCode(HttpStatus.BAD_REQUEST.value());
 			respuesta.setMessage("Ocurrió un error: " + e.getMessage());
+			LOG.info("Error" + respuesta.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(respuesta);
 		}
 	}
 
-	
+	@PostMapping("/productos/editar")
+	public ResponseEntity<GenericResponse<String>> editarProducto(@RequestPart("producto") Productos producto,
+			@RequestPart(value = "imagenes", required = false) List<MultipartFile> nuevasImagenes,
+			@RequestPart(value = "imagenesEliminadas", required = false) String imagenesEliminadasJson) {
 
-//	@PostMapping("/productos/editar")
-//	public ResponseEntity<GenericResponse<String>> editarProductos(@RequestBody Productos productoEditado) {
-//		GenericResponse<String> respuesta = new GenericResponse<>();
-//
-//		try {
-//			boolean actualizado = serviceProductos.editarProducto(productoEditado);
-//
-//			if (actualizado) {
-//				respuesta.setCode(HttpStatus.OK.value());
-//				respuesta.setMessage("Producto editado correctamente");
-//				return ResponseEntity.ok(respuesta);
-//			} else {
-//				respuesta.setCode(HttpStatus.NOT_FOUND.value());
-//				respuesta.setMessage("No se encontró el producto con el ID especificado");
-//				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respuesta);
-//			}
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			respuesta.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-//			respuesta.setMessage("Error al editar el producto: " + e.getMessage());
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
-//		}
-//	}
+		GenericResponse<String> respuesta = new GenericResponse<>();
+
+		try {
+			// 1️⃣ Obtener producto de la DB
+			Productos productoDB = serviceProductos.obtenerProductoPorId(producto.getIdProducto());
+			if (productoDB == null) {
+				respuesta.setCode(HttpStatus.NOT_FOUND.value());
+				respuesta.setMessage("Producto no encontrado");
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respuesta);
+			}
+
+			// 2️⃣ Actualizar campos básicos
+			productoDB.setNombre(producto.getNombre());
+			productoDB.setDescripcion(producto.getDescripcion());
+
+			// 3️⃣ Manejar categoría de forma segura
+			if (producto.getCategoria() != null && producto.getCategoria().getIdCategoria() != null) {
+				CategoriasModels cat = serviceCategorias.obtenerCategoriaPorId(producto.getCategoria().getIdCategoria());
+				productoDB.setCategoria(cat); // Ahora es un objeto completo
+			}
+
+			// 4️⃣ Procesar imágenes eliminadas
+			if (imagenesEliminadasJson != null && !imagenesEliminadasJson.isEmpty()) {
+				
+				//asegurar que la lista no sea nula 
+				if (productoDB.getImagen() == null) {
+					productoDB.setImagen(new ArrayList<>());
+					
+				}
+				
+				
+				ObjectMapper mapper = new ObjectMapper();
+				List<String> imagenesEliminadas = mapper.readValue(imagenesEliminadasJson,
+						new TypeReference<List<String>>() {
+						});
+				productoDB.getImagen().removeIf(img -> imagenesEliminadas.contains(img.getUrl_imagen()));
+			}
+
+			// 5️⃣ Subir nuevas imágenes
+			if (nuevasImagenes != null && !nuevasImagenes.isEmpty()) {
+				for (MultipartFile imagen : nuevasImagenes) {
+					
+					 // Subimos la imagen a Cloudinary
+		            Map<String, String> uploadResult = serviceCloudinary.subirImagen(imagen);
+
+		            Imagenes img = new Imagenes();
+		            img.setNombre_imagen(imagen.getOriginalFilename());
+		            img.setUrl_imagen(uploadResult.get("url")); // ahora sí tiene URL real
+		            //img.setPublic_id(uploadResult.get("public_id"));
+					productoDB.getImagen().add(img);
+				}
+			}
+
+			// 6️⃣ Guardar cambios
+			serviceProductos.actualizarProducto(productoDB);
+
+			respuesta.setCode(HttpStatus.OK.value());
+			respuesta.setMessage("Producto actualizado correctamente");
+			return ResponseEntity.ok(respuesta);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			respuesta.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			respuesta.setMessage("Error al editar producto: " + e.getMessage());
+			LOG.info("Error" + respuesta.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
+		}
+	}
 
 	@PostMapping("/productos/eliminar")
 	public ResponseEntity<GenericResponse<String>> eliminarProductos(
@@ -178,6 +237,7 @@ public class ProductosController {
 			e.printStackTrace();
 			respuesta.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			respuesta.setMessage("Error al editar el producto: " + e.getMessage());
+			LOG.info("Error" + respuesta.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
 		}
 	}

@@ -12,12 +12,13 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import com.cocinas.integrales.negocio.correo.model.CorreoRequest;
+import com.cocinas.integrales.negocio.correo.services.CorreoService;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
 @Service
-public class CorreoServiceImpl {
+public class CorreoServiceImpl implements CorreoService{
 
 	@Value("${app.mail.from}")
 	private String correoFrom;
@@ -30,6 +31,7 @@ public class CorreoServiceImpl {
 		this.templateEngine = templateEngine;
 	}
 
+	@Override
 	public void enviarCorreo(CorreoRequest request) throws MessagingException {
 
 		// Obtener la fecha
@@ -82,7 +84,8 @@ public class CorreoServiceImpl {
 		}
 	}
 
-	private boolean esCorreoValido(String correo) {
+	@Override
+	public boolean esCorreoValido(String correo) {
 		if (correo == null || correo.isBlank())
 			return false;
 		return correo.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");

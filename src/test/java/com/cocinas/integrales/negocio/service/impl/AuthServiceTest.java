@@ -24,7 +24,7 @@ class AuthServiceTest {
 		
 		
 		// Arrange
-		String contra = "123456";
+		String contra = "123456789";
 
 		// Act
 		String passwordNueva = service.metodoEncriptarPassword(contra);

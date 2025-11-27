@@ -29,6 +29,17 @@ public class CategoriasServiceImpl implements ICategoriasServices{
 	public CategoriasServiceImpl(CategoriasDao vamosAlDaoDeCategorias) {
 		this.vamosAlDaoDeCategorias = vamosAlDaoDeCategorias;
 	}
+	
+	@Override
+	public CategoriasModels obtenerCategoriaPorId(Long idCategoria) {
+		
+		CategoriasModels idCateg = new CategoriasModels();
+		
+		idCateg = vamosAlDaoDeCategorias.obtenerIdDeCategoria(idCategoria);
+		
+		
+		return idCateg;
+	}
 
 	
 	@Override
@@ -37,7 +48,6 @@ public class CategoriasServiceImpl implements ICategoriasServices{
 		List<CategoriasModels> listaDeCategorias = new ArrayList<>();
 
 		listaDeCategorias = vamosAlDaoDeCategorias.consultarCategoriasDao();
-
 		return listaDeCategorias;
 	}
 	
@@ -106,5 +116,8 @@ public class CategoriasServiceImpl implements ICategoriasServices{
 
 		return banderaPrincipal;
 	}
+
+
+	
 
 }

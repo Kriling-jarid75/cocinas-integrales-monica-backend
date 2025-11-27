@@ -1,5 +1,6 @@
 package com.cocinas.integrales.negocio.productos.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.cocinas.integrales.negocio.categorias.model.CategoriasModels;
@@ -20,7 +21,7 @@ public class Productos {
 	private CategoriasModels categoria; // ⚡ objeto completo
 //	private String precio;
 //	private String imagenBase64;
-	private List<Imagenes> imagen;   // nueva propiedad para la ruta
+	private List<Imagenes> imagen = new ArrayList<>();   // nueva propiedad para la ruta
 	
 
 }
