@@ -19,4 +19,6 @@ public interface ICategoriasServices {
 
 	CategoriasModels obtenerCategoriaPorId(Long idCategoria);
 
+	boolean eliminarCategoriasMasivamente(List<CategoriasModels> listaDeCategorias);
+
 }

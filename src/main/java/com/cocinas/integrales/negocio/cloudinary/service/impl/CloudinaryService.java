@@ -37,16 +37,6 @@ public class CloudinaryService {
     }
     
     
- // ✅ Método para eliminar una imagen
-//    public boolean eliminarImagen(String publicId) {
-//        try {
-//            Map result = cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
-//            return "ok".equals(result.get("result")); // devuelve true si se eliminó correctamente
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//    }
     
     public boolean deteleImageCloudinary(String idImagen) throws IOException {
     	 Map result = cloudinary.uploader().destroy(idImagen, ObjectUtils.emptyMap());

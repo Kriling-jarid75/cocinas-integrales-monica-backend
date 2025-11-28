@@ -244,12 +244,34 @@ public class CategoriasDao{
 	    
 		return categoria;
 	}
+	
+	
+	public boolean eliminarMasivamenteCategorias(CategoriasModels categoria) {
 
+		String sql = ConstantesDB.eliminar_categoria.getQuery();
 
+		
 
-	public boolean existeProductosConCategorias(Long idCategoria) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+        try (Connection conn = DriverManager.getConnection(
+                dbConfig.getUrl(),
+                dbConfig.getUsername(),
+                dbConfig.getPassword());
+             CallableStatement cs = conn.prepareCall(sql)) {
+
+            // 🔹 Parámetros de entrada
+            cs.setLong(1, categoria.getIdCategoria());
+            
+            // 🔹 Ejecutamos el SP
+            int rowsAffected = cs.executeUpdate();
+
+            LOG.info("✅ Categoria eliminada correctamente, filas afectadas: {}", rowsAffected);
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            LOG.error("❌ Error al eliminar la categoria: ", e);
+            return false;
+        }
+    }
+
 	
 }

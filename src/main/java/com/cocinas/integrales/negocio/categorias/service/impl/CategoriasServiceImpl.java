@@ -116,6 +116,37 @@ public class CategoriasServiceImpl implements ICategoriasServices{
 
 		return banderaPrincipal;
 	}
+	
+	
+	// En tu interfaz o clase Service:
+	@Override
+	public boolean eliminarCategoriasMasivamente(List<CategoriasModels> listaDeCategorias) {
+		boolean banderaPrincipal = false;
+		boolean seEliminoCorrectamente = false;
+
+		try {
+			// Implementación de la lógica:
+			for (CategoriasModels categoria : listaDeCategorias) {
+				// Llama a tu repositorio o DAO para eliminar por ID
+				seEliminoCorrectamente = vamosAlDaoDeCategorias.eliminarMasivamenteCategorias(categoria);
+			}
+			
+			if (seEliminoCorrectamente) {
+				return banderaPrincipal = true;
+			} else {
+				return banderaPrincipal = false;
+			}
+			
+			
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOG.info("Ocurrió un error al eliminar la categoria: " + e.getMessage());
+		}
+
+		// ... lógica para confirmar éxito
+		return banderaPrincipal; // o false si hubo un error
+	}
 
 
 	

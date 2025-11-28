@@ -200,7 +200,39 @@ public class CategoriasController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			respuesta.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			respuesta.setMessage("Error al editar el producto: " + e.getMessage());
+			respuesta.setMessage("Error al eliminar las categorias: " + e.getMessage());
+			 LOG.info("Error" + respuesta.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
+		}
+	}
+	
+	
+	@PostMapping("/categoria/eliminar/todas")
+	public ResponseEntity<GenericResponse<String>> eliminarTodasCategorias(
+			@RequestBody List<CategoriasModels> req) {
+		GenericResponse<String> respuesta = new GenericResponse<>();
+
+		try {
+			 // Necesitas adaptar tu servicio para que acepte la lista
+	        boolean eliminado = serviceCategorias.eliminarCategoriasMasivamente(req); 
+
+
+			if (eliminado) {
+				respuesta.setCode(HttpStatus.OK.value());
+				respuesta.setMessage("Categorias eliminadas correctamente");
+				return ResponseEntity.ok(respuesta);
+			} else {
+				 // Este else puede requerir lógica diferente si no se elimino ninguna, o solo algunas
+	            respuesta.setCode(HttpStatus.NOT_FOUND.value());
+	            respuesta.setMessage("No se encontró al menos una de las categorías a eliminar o hubo un problema.");
+	             LOG.info("Error" + respuesta.getMessage());
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respuesta);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			respuesta.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			respuesta.setMessage("Error al eliminar todas las categorias: " + e.getMessage());
 			 LOG.info("Error" + respuesta.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
 		}

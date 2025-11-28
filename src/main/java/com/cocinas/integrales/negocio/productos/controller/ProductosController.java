@@ -194,7 +194,7 @@ public class ProductosController {
 		            Imagenes img = new Imagenes();
 		            img.setNombre_imagen(imagen.getOriginalFilename());
 		            img.setUrl_imagen(uploadResult.get("url")); // ahora sí tiene URL real
-		            //img.setPublic_id(uploadResult.get("public_id"));
+		            img.setPublic_id(uploadResult.get("public_id"));
 					productoDB.getImagen().add(img);
 				}
 			}
